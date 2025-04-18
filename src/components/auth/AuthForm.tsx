@@ -22,26 +22,52 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     setLoading(true);
     
     try {
-      // This is where Supabase auth would be integrated
-      console.log('Auth form submitted:', { email, password, name });
-      
-      // Simulate auth process
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
       if (mode === 'login') {
+        // Get users from localStorage
+        const users = JSON.parse(localStorage.getItem('res4city-users') || '[]');
+        const user = users.find((u: any) => u.email === email);
+        
+        if (!user) {
+          toast.error('User not found');
+          return;
+        }
+        
+        if (user.password !== password) {
+          toast.error('Invalid password');
+          return;
+        }
+        
         toast.success('Successfully logged in!');
+        localStorage.setItem('res4city-user', JSON.stringify(user));
       } else {
+        // Sign up
+        const users = JSON.parse(localStorage.getItem('res4city-users') || '[]');
+        
+        if (users.some((u: any) => u.email === email)) {
+          toast.error('Email already registered');
+          return;
+        }
+        
+        const newUser = {
+          id: 'user-' + Date.now(),
+          email,
+          password,
+          name: name || email.split('@')[0],
+        };
+        
+        users.push(newUser);
+        localStorage.setItem('res4city-users', JSON.stringify(users));
+        localStorage.setItem('res4city-user', JSON.stringify(newUser));
         toast.success('Account created successfully!');
       }
       
-      // Store auth state (temporary mock)
-      localStorage.setItem('res4city-user', JSON.stringify({ 
-        email, 
-        name: name || email.split('@')[0],
-        id: 'user-' + Date.now()
-      }));
+      // Initialize user progress
+      const userId = 'user-' + Date.now();
+      if (!localStorage.getItem(`progress-${userId}`)) {
+        localStorage.setItem(`progress-${userId}`, '{}');
+      }
       
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Auth error:', error);
       toast.error(mode === 'login' ? 'Login failed' : 'Signup failed');

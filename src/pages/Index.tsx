@@ -9,7 +9,7 @@ const Index = () => {
     // Check if user is logged in
     const user = localStorage.getItem('res4city-user');
     if (user) {
-      navigate('/');
+      navigate('/dashboard');
     } else {
       navigate('/login');
     }

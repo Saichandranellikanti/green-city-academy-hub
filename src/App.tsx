@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,7 @@ import ProgressPage from "./pages/ProgressPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
+import DashboardPage from "./pages/DashboardPage";
 
 // Components
 import AppLayout from "./components/layout/AppLayout";
@@ -40,6 +40,7 @@ const App = () => (
               </AuthGuard>
             }
           >
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/course/:courseId" element={<CourseDetailPage />} />
             <Route path="/progress" element={<ProgressPage />} />
