@@ -34,6 +34,14 @@ type AnalyticsEvent = {
   url: string;
 };
 
+type UserInteraction = {
+  courseId: string;
+  views: number;
+  timeSpent: number;
+  lastAccessed: number;
+  progress: number;
+};
+
 // Get or create a session ID
 const getSessionId = (): string => {
   let sessionId = localStorage.getItem(LOCAL_STORAGE_SESSION_KEY);
