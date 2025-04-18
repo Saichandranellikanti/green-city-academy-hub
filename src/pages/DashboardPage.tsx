@@ -28,6 +28,7 @@ const DashboardPage = () => {
   const [recommendedCourses, setRecommendedCourses] = useState<CourseType[]>([]);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const user = JSON.parse(localStorage.getItem('res4city-user') || '{}');
+  const isAdmin = user.id === 'Admin';
   
   useEffect(() => {
     // Load user's courses from localStorage
@@ -58,20 +59,22 @@ const DashboardPage = () => {
           <p className="text-muted-foreground">Continue your journey towards sustainable cities</p>
         </div>
         
-        <div className="mt-4 lg:mt-0">
-          <Button 
-            variant="outline" 
-            onClick={() => setShowAnalytics(!showAnalytics)}
-            className="flex items-center gap-2"
-          >
-            <PanelRight className="h-4 w-4" />
-            {showAnalytics ? 'Hide Analytics' : 'Show Analytics'}
-          </Button>
-        </div>
+        {isAdmin && (
+          <div className="mt-4 lg:mt-0">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowAnalytics(!showAnalytics)}
+              className="flex items-center gap-2"
+            >
+              <PanelRight className="h-4 w-4" />
+              {showAnalytics ? 'Hide Analytics' : 'Show Analytics'}
+            </Button>
+          </div>
+        )}
       </div>
       
-      {/* Analytics Dashboard */}
-      {showAnalytics && (
+      {/* Analytics Dashboard - Only visible to admin */}
+      {isAdmin && showAnalytics && (
         <div className="mb-8 animate-fade-in">
           <AnalyticsDashboard />
         </div>
