@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Award, User } from 'lucide-react';
+import { Home, BookOpen, Award, User, Library } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const TabBar = () => {
@@ -9,9 +9,14 @@ const TabBar = () => {
   
   const tabs = [
     {
-      name: 'Home',
+      name: 'Dashboard',
       path: '/',
       icon: Home
+    },
+    {
+      name: 'Courses',
+      path: '/courses',
+      icon: Library
     },
     {
       name: 'Progress',
@@ -31,7 +36,7 @@ const TabBar = () => {
   ];
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-2 z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-2 z-40">
       <div className="flex items-center justify-around">
         {tabs.map((tab) => {
           const isActive = location.pathname === tab.path ||
