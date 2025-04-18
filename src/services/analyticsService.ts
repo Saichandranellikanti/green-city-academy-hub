@@ -23,6 +23,7 @@ type EventType =
   | 'signup'
   | 'timeOnScreen'
   | 'chatbotMessage'
+  | 'notification'
   | 'error';
 
 type AnalyticsEvent = {
@@ -31,14 +32,6 @@ type AnalyticsEvent = {
   details: Record<string, any>;
   timestamp: number;
   url: string;
-};
-
-type UserInteraction = {
-  courseId: string;
-  views: number;
-  timeSpent: number;
-  lastAccessed: number;
-  progress: number;
 };
 
 // Get or create a session ID
@@ -427,4 +420,5 @@ export const analyticsService = {
   configureBackendUrl,
   initAnalytics,
   getCourseRecommendations,
+  trackEvent,
 };
