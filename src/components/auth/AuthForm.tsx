@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -23,6 +22,21 @@ const AuthForm = ({ mode }: AuthFormProps) => {
     
     try {
       if (mode === 'login') {
+        // Special case for admin login
+        if (email === 'Admin@gmail.com' && password === 'Admin1234') {
+          const adminUser = {
+            id: 'Admin',
+            email: 'Admin@gmail.com',
+            name: 'Admin',
+            role: 'admin'
+          };
+          
+          localStorage.setItem('res4city-user', JSON.stringify(adminUser));
+          toast.success('Admin logged in successfully!');
+          navigate('/dashboard');
+          return;
+        }
+
         // Get users from localStorage
         const users = JSON.parse(localStorage.getItem('res4city-users') || '[]');
         const user = users.find((u: any) => u.email === email);
