@@ -1,5 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
+import { useUserId } from "../hooks/useUserId";
+import { recordImpression, recordClick } from "../lib/supabase";
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Accordion, 
@@ -25,6 +27,21 @@ import { analyticsService } from '@/services/analyticsService';
 
 const CourseDetailPage = () => {
   const { courseId } = useParams<{ courseId: string }>();
+  const userId = useUserId()
+
+  // fire an “impression” when this page mounts:
+  useEffect(() => {
+    recordImpression(courseId, userId)
+  }, [courseId, userId])
+
+  const onStart = () => {
+    recordClick(courseId, userId)
+    // then navigate on to the lesson, etc.
+    navigate(`/lesson/${courseId}/…`)
+  }
+
+  return <Button onClick={onStart}>Start Course</Button>
+
   const navigate = useNavigate();
   const [course, setCourse] = useState<CourseType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
