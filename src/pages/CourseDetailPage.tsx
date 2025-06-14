@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useUserId } from "../hooks/useUserId";
 import { recordImpression, recordClick } from "../lib/supabase";
@@ -27,24 +26,30 @@ import { analyticsService } from '@/services/analyticsService';
 
 const CourseDetailPage = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const userId = useUserId()
-
-  // fire an “impression” when this page mounts:
-  useEffect(() => {
-    recordImpression(courseId, userId)
-  }, [courseId, userId])
-
-  const onStart = () => {
-    recordClick(courseId, userId)
-    // then navigate on to the lesson, etc.
-    navigate(`/lesson/${courseId}/…`)
-  }
-
-  return <Button onClick={onStart}>Start Course</Button>
-
+  const userId = useUserId();
   const navigate = useNavigate();
   const [course, setCourse] = useState<CourseType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // fire an "impression" when this page mounts:
+  useEffect(() => {
+    if (courseId && userId) {
+      recordImpression(courseId, userId);
+    }
+  }, [courseId, userId]);
+
+  const handleStartCourse = () => {
+    if (courseId && userId) {
+      recordClick(courseId, userId);
+    }
+    analyticsService.trackButtonClick('start-course', 'Start Course');
+    // Navigate to first lesson
+    if (course?.syllabus && course.syllabus.length > 0 && course.syllabus[0].lessons.length > 0) {
+      navigate(`/lesson/${course.id}/${course.syllabus[0].lessons[0].id}`);
+    } else {
+      toast.error('No lessons available for this course');
+    }
+  };
   
   useEffect(() => {
     // Simulate loading course data
@@ -66,16 +71,6 @@ const CourseDetailPage = () => {
       analyticsService.trackTimeOnScreen(`course-detail-${courseId}`, timeSpent);
     };
   }, [courseId]);
-  
-  const handleStartCourse = () => {
-    analyticsService.trackButtonClick('start-course', 'Start Course');
-    // Navigate to first lesson
-    if (course?.syllabus && course.syllabus.length > 0 && course.syllabus[0].lessons.length > 0) {
-      navigate(`/lesson/${course.id}/${course.syllabus[0].lessons[0].id}`);
-    } else {
-      toast.error('No lessons available for this course');
-    }
-  };
   
   const handleContinueCourse = () => {
     analyticsService.trackButtonClick('continue-course', 'Continue Course');
